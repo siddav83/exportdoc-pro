@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExportDoc Pro - Professional Export Documents Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🏭 ExportDoc Pro</h1>
+        <p>
+          Advanced Commercial Invoice & Packing List Generator for Small
+          Businesses
+        </p>
+      </div>
+
+      <div class="tab-container">
+        <button class="tab active" onclick="switchTab('setup')">
+          ⚙️ Setup
+        </button>
+        <button class="tab" onclick="switchTab('commercial-invoice')">
+          📄 Commercial Invoice
+        </button>
+        <button class="tab" onclick="switchTab('packing-list')">
+          📋 Packing List
+        </button>
+      </div>
+
+      <div class="content">
+        <!-- Setup Tab -->
+        <div id="setup" class="form-section active">
+          <!-- <div class="preset-section">
+            <h3>🏢 Quick Company Presets</h3>
+            <div class="preset-buttons">
+              <button class="preset-btn" onclick="loadCompanyPreset('pbo')">
+                PBO Skincare Ltd
+              </button>
+              <button class="preset-btn" onclick="loadCompanyPreset('amazon')">
+                Amazon US
+              </button>
+              <button
+                class="preset-btn"
+                onclick="loadCompanyPreset('nutrition')"
+              >
+                Nutrition Works Ltd
+              </button>
+              <button class="preset-btn" onclick="loadCompanyPreset('custom')">
+                Custom
+              </button>
+            </div>
+          </div> -->
+
+          <div class="form-grid">
+            <div>
+              <h3 style="color: #2c3e50; margin-bottom: 20px">
+                🏢 Seller/Shipper Information
+              </h3>
+              <div class="form-group">
+                <label>Company Name</label>
+                <input
+                  type="text"
+                  id="seller-company"
+                  placeholder="Your Company Name"
+                />
+              </div>
+              <div class="form-group">
+                <label>Address</label>
+                <textarea
+                  id="seller-address"
+                  rows="3"
+                  placeholder="Street Address, City, State, ZIP, Country"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label>DUNs Number</label>
+                <input type="text" id="seller-duns" placeholder="" />
+              </div>
+              <div class="form-group">
+                <label>Registration Number</label>
+                <input type="text" id="seller-registration" placeholder="" />
+              </div>
+            </div>
+            <div>
+              <h3 style="color: #2c3e50; margin-bottom: 20px">
+                🛒 Buyer/Consignee Information
+              </h3>
+              <div class="form-group">
+                <label>Company Name</label>
+                <input
+                  type="text"
+                  id="buyer-company"
+                  placeholder="Buyer Company Name"
+                />
+              </div>
+              <div class="form-group">
+                <label>Address</label>
+                <textarea
+                  id="buyer-address"
+                  rows="3"
+                  placeholder="Street Address, City, State, ZIP, Country"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label>Tax ID / VAT Number</label>
+                <input
+                  type="text"
+                  id="buyer-tax"
+                  placeholder="Tax ID or VAT Number"
+                />
+              </div>
+            </div>
+            <div>
+              <h3 style="color: #2c3e50; margin-bottom: 20px">
+                🏭 Manufacturer Information
+              </h3>
+              <div class="form-group">
+                <label>Manufacturer Name</label>
+                <input
+                  type="text"
+                  id="manufacturer-company"
+                  placeholder="Nutrition Works Ltd"
+                />
+              </div>
+              <div class="form-group">
+                <label>Address</label>
+                <textarea
+                  id="manufacturer-address"
+                  rows="3"
+                  placeholder="Manufacturing Address"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label>Facility Registration No.</label>
+                <input type="text" id="facility-registration" placeholder="" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Document Number</label>
+              <input type="text" id="doc-number" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" id="doc-date" />
+            </div>
+            <div class="form-group">
+              <label>Currency</label>
+              <select id="currency">
+                <option value="GBP">GBP - British Pound</option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Terms of Sale</label>
+              <select id="terms">
+                <option value="DDP">DDP - Delivered Duty Paid</option>
+                <option value="FOB">FOB - Free on Board</option>
+                <option value="CIF">CIF - Cost, Insurance, Freight</option>
+                <option value="EXW">EXW - Ex Works</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Mode of Shipment</label>
+              <select id="shipment-mode">
+                <option value="SEA">SEA</option>
+                <option value="AIR">AIR</option>
+                <option value="LAND">LAND</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Country of Origin</label>
+              <input type="text" id="origin-country" value="United Kingdom" />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Net Weight (Kgs)</label>
+              <input
+                type="number"
+                id="net-weight"
+                placeholder="1010"
+                step="0.1"
+              />
+            </div>
+            <div class="form-group">
+              <label>Gross Weight (Kgs)</label>
+              <input
+                type="number"
+                id="gross-weight"
+                placeholder="1070"
+                step="0.1"
+              />
+            </div>
+            <div class="form-group">
+              <label>Number of Pallets</label>
+              <input type="number" id="num-pallets" placeholder="3" min="1" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Packing Instructions</label>
+            <textarea
+              id="packing-instructions"
+              rows="2"
+              placeholder="Packed in carton containers on a standard wooden pallet"
+            ></textarea>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Authorizing Person</label>
+              <input type="text" id="auth-person" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Title/Position</label>
+              <input type="text" id="auth-title" placeholder="Senior Manager" />
+            </div>
+            <div class="form-group">
+              <label>Signature Date</label>
+              <input type="date" id="signature-date" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Commercial Invoice Tab -->
+        <div id="commercial-invoice" class="form-section">
+          <div class="items-section">
+            <div class="items-header">
+              <h3>💰 Invoice Items</h3>
+              <div class="bulk-upload">
+                <button
+                  class="template-btn"
+                  onclick="downloadCSVTemplate('invoice')"
+                >
+                  📥 Download Template
+                </button>
+                <input
+                  type="file"
+                  id="csv-upload-ci"
+                  class="file-input"
+                  accept=".csv,.xlsx"
+                  onchange="handleFileUpload(this, 'invoice')"
+                />
+                <label for="csv-upload-ci" class="file-label"
+                  >📁 Upload CSV/Excel</label
+                >
+                <button class="add-item-btn" onclick="addInvoiceItem()">
+                  + Add Item
+                </button>
+              </div>
+            </div>
+            <div id="invoice-items">
+              <div class="item-row">
+                <input
+                  type="number"
+                  placeholder="Qty"
+                  class="item-quantity"
+                  min="1"
+                  oninput="calculateRowTotal(this)"
+                />
+                <input
+                  type="number"
+                  placeholder="Cartons"
+                  class="item-cartons"
+                  min="1"
+                />
+                <input type="text" placeholder="Product SKU" class="item-sku" />
+                <select class="item-unit">
+                  <option value="Pccs">Pccs</option>
+                  <option value="Kg">Kg</option>
+                  <option value="Units">Units</option>
+                  <option value="Boxes">Boxes</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="HS Code"
+                  class="item-hs"
+                  value=""
+                />
+                <input
+                  type="number"
+                  placeholder="Unit Price"
+                  class="item-price"
+                  step="0.01"
+                  oninput="calculateRowTotal(this)"
+                />
+                <input
+                  type="number"
+                  placeholder="Total"
+                  class="item-total"
+                  readonly
+                />
+                <button class="remove-item" onclick="removeItem(this)">
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="total-items">0</div>
+              <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="total-cartons">0</div>
+              <div class="stat-label">Total Cartons</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="total-value">£0.00</div>
+              <div class="stat-label">Total Value</div>
+            </div>
+          </div>
+
+          <button class="generate-btn" onclick="generateInvoice()">
+            💰 Generate Commercial Invoice
+          </button>
+          <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+        </div>
+
+        <!-- Packing List Tab -->
+        <div id="packing-list" class="form-section">
+          <div class="items-section">
+            <div class="items-header">
+              <h3>📦 Packing Items</h3>
+              <div class="bulk-upload">
+                <button
+                  class="template-btn"
+                  onclick="downloadCSVTemplate('packing')"
+                >
+                  📥 Download Template
+                </button>
+                <input
+                  type="file"
+                  id="csv-upload-pl"
+                  class="file-input"
+                  accept=".csv,.xlsx"
+                  onchange="handleFileUpload(this, 'packing')"
+                />
+                <label for="csv-upload-pl" class="file-label"
+                  >📁 Upload CSV/Excel</label
+                >
+                <button class="add-item-btn" onclick="addPackingItem()">
+                  + Add Item
+                </button>
+              </div>
+            </div>
+            <div id="packing-items">
+              <div class="item-row packing-item-row">
+                <input
+                  type="number"
+                  placeholder="Pallet #"
+                  class="item-pallet"
+                  min="1"
+                />
+                <input type="text" placeholder="SKU" class="item-sku" />
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  class="item-description"
+                />
+                <input
+                  type="number"
+                  placeholder="Quantity"
+                  class="item-quantity"
+                  min="1"
+                />
+                <input
+                  type="number"
+                  placeholder="Cartons"
+                  class="item-cartons"
+                  min="1"
+                />
+                <input
+                  type="text"
+                  placeholder="Batch Code"
+                  class="item-batch"
+                />
+                <input
+                  type="date"
+                  placeholder="Expiration Date"
+                  class="item-expiry"
+                />
+                <input
+                  type="text"
+                  placeholder="Dimensions"
+                  class="item-dimensions"
+                />
+                <button class="remove-item" onclick="removeItem(this)">
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="generate-btn" onclick="generatePackingList()">
+            📋 Generate Packing List
+          </button>
+          <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+        </div>
+
+        <!-- Preview Area -->
+        <div id="preview" class="preview" style="display: none"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
