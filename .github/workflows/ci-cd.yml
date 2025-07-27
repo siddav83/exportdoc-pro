@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, dev, preprod, prod ]
+    branches: [main, dev, preprod, prod]
   pull_request:
-    branches: [ main, dev, preprod, prod ]
+    branches: [main, dev, preprod, prod]
 
 jobs:
   test:
@@ -12,16 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      
+          node-version: "18"
+
       - name: Install dependencies (if any)
         run: |
           echo "No dependencies to install for static site"
-      
+
       - name: Run tests
         run: |
           echo "Running basic validation..."
@@ -39,7 +39,7 @@ jobs:
             exit 1
           fi
           echo "✅ All required files found"
-      
+
       - name: Validate HTML
         run: |
           echo "Validating HTML structure..."
@@ -47,7 +47,7 @@ jobs:
           if grep -q "<!DOCTYPE html>" index.html; then
             echo "✅ HTML structure looks good"
           else
-            echo "❌ HTML structure validation failed"
+            echo "❌ HTML validation failed"
             exit 1
           fi
 
@@ -58,13 +58,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Deploy to Netlify (Dev)
         uses: nwtgck/actions-netlify@v2.0
         with:
-          publish-dir: '.'
+          publish-dir: "."
           production-branch: prod
           deploy-message: "Deploy from GitHub Actions (Dev)"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -76,13 +79,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Deploy to Netlify (PreProd)
         uses: nwtgck/actions-netlify@v2.0
         with:
-          publish-dir: '.'
+          publish-dir: "."
           production-branch: prod
           deploy-message: "Deploy from GitHub Actions (PreProd)"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -94,13 +100,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Deploy to Netlify (Production)
         uses: nwtgck/actions-netlify@v2.0
         with:
-          publish-dir: '.'
+          publish-dir: "."
           production-branch: prod
           deploy-message: "Deploy from GitHub Actions (Production)"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
