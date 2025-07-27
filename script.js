@@ -707,8 +707,54 @@ function generatePackingList() {
   preview.style.display = "block";
 }
 
-// Initialize the application
+// Authentication check - must be at the top
+function checkAuthentication() {
+  // Check if auth system is available
+  if (typeof window.auth !== "undefined") {
+    if (!window.auth.isUserAuthenticated()) {
+      window.location.href = "/login.html";
+      return false;
+    }
+    return true;
+  }
+  return true; // Allow access if no auth system
+}
+
+// Initialize authentication
 document.addEventListener("DOMContentLoaded", function () {
+  // Check authentication first
+  if (!checkAuthentication()) {
+    return;
+  }
+
+  // Setup user info display
+  setupUserInfo();
+
+  // Initialize the rest of the app
+  initializeApp();
+});
+
+function setupUserInfo() {
+  if (typeof window.auth !== "undefined" && window.auth.getCurrentUser()) {
+    const user = window.auth.getCurrentUser();
+    const userInfo = document.getElementById("userInfo");
+    const userName = document.getElementById("userName");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (userInfo && userName && logoutBtn) {
+      userName.textContent = `Welcome, ${user.name}`;
+      userInfo.style.display = "flex";
+      userInfo.style.alignItems = "center";
+      userInfo.style.gap = "12px";
+
+      logoutBtn.addEventListener("click", () => {
+        window.auth.logout();
+      });
+    }
+  }
+}
+
+function initializeApp() {
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("doc-date").value = today;
   document.getElementById("signature-date").value = today;
@@ -721,7 +767,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("doc-number").value = docNumber;
 
   updateSummaryStats();
-});
+}
 
 // Auto-calculate weights and totals when items change
 document.addEventListener("input", function (e) {
