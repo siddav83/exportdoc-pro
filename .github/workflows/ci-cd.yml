@@ -1,0 +1,106 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, dev, preprod, prod ]
+  pull_request:
+    branches: [ main, dev, preprod, prod ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies (if any)
+        run: |
+          echo "No dependencies to install for static site"
+      
+      - name: Run tests
+        run: |
+          echo "Running basic validation..."
+          # Check if required files exist
+          if [ ! -f "index.html" ]; then
+            echo "❌ index.html not found"
+            exit 1
+          fi
+          if [ ! -f "styles.css" ]; then
+            echo "❌ styles.css not found"
+            exit 1
+          fi
+          if [ ! -f "script.js" ]; then
+            echo "❌ script.js not found"
+            exit 1
+          fi
+          echo "✅ All required files found"
+      
+      - name: Validate HTML
+        run: |
+          echo "Validating HTML structure..."
+          # Basic HTML validation
+          if grep -q "<!DOCTYPE html>" index.html; then
+            echo "✅ HTML structure looks good"
+          else
+            echo "❌ HTML structure validation failed"
+            exit 1
+          fi
+
+  deploy-dev:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy to Netlify (Dev)
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: '.'
+          production-branch: prod
+          deploy-message: "Deploy from GitHub Actions (Dev)"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  deploy-preprod:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/preprod'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy to Netlify (PreProd)
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: '.'
+          production-branch: prod
+          deploy-message: "Deploy from GitHub Actions (PreProd)"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  deploy-prod:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/prod'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy to Netlify (Production)
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: '.'
+          production-branch: prod
+          deploy-message: "Deploy from GitHub Actions (Production)"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
