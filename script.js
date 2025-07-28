@@ -714,11 +714,11 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("signature-date").value = today;
 
   // Auto-generate document number
-  const docNumber = `AMZUS-${new Date()
-    .toISOString()
-    .split("T")[0]
-    .replace(/-/g, "")}-001-REG`;
-  document.getElementById("doc-number").value = docNumber;
+  // const docNumber = `AMZUS-${new Date()
+  //   .toISOString()
+  //   .split("T")[0]
+  //   .replace(/-/g, "")}-001-REG`;
+  // document.getElementById("doc-number").value = docNumber;
 
   updateSummaryStats();
 });
